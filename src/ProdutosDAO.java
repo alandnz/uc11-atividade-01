@@ -10,18 +10,13 @@ import java.util.ArrayList;
 
 public class ProdutosDAO {
 
-    Connection conn;
-    PreparedStatement prep;
-    ResultSet resultset;
-    ArrayList<ProdutosDTO> listagem = new ArrayList<>();
-
     public boolean cadastrarProduto(ProdutosDTO produto) {
 
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
 
         try {
-            conn = new conectaDAO().connectDB();
-            prep = conn.prepareStatement(sql);
+            Connection conn = new conectaDAO().connectDB();
+            PreparedStatement prep = conn.prepareStatement(sql);
 
             prep.setString(1, produto.getNome());
             prep.setInt(2, produto.getValor());
@@ -37,7 +32,28 @@ public class ProdutosDAO {
 
     public ArrayList<ProdutosDTO> listarProdutos() {
 
-        return listagem;
+        ArrayList<ProdutosDTO> lista = new ArrayList<>();
+        String sql = "SELECT id, nome, valor, status FROM produtos";
+
+        try {
+            Connection conn = new conectaDAO().connectDB();
+            PreparedStatement prep = conn.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+
+            while (rs.next()) {
+                ProdutosDTO p = new ProdutosDTO();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setValor(rs.getInt("valor"));
+                p.setStatus(rs.getString("status"));
+                lista.add(p);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar: " + e.getMessage());
+        }
+
+        return lista;
     }
 
 }
