@@ -15,7 +15,7 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
 
-    public void cadastrarProduto(ProdutosDTO produto) {
+    public boolean cadastrarProduto(ProdutosDTO produto) {
 
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
 
@@ -27,10 +27,11 @@ public class ProdutosDAO {
             prep.setInt(2, produto.getValor());
             prep.setString(3, produto.getStatus());
 
-            prep.executeUpdate();
+            return prep.executeUpdate() == 1;
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());
+            return false;
         }
     }
 

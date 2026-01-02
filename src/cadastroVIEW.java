@@ -134,9 +134,15 @@ public class cadastroVIEW extends javax.swing.JFrame {
         produto.setStatus(status);
 
         ProdutosDAO produtodao = new ProdutosDAO();
-        produtodao.cadastrarProduto(produto);
 
-        JOptionPane.showMessageDialog(null, "Dados inseridos com sucesso");
+        boolean resposta = produtodao.cadastrarProduto(produto);
+
+        if (resposta) {
+            JOptionPane.showMessageDialog(null, "Dados inseridos com sucesso");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao inserir dados");
+        }
 
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
