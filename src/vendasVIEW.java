@@ -1,10 +1,47 @@
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 public class vendasVIEW extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(vendasVIEW.class.getName());
+    private javax.swing.table.TableRowSorter<DefaultTableModel> sorter;
 
     public vendasVIEW() {
         initComponents();
+        configurarTabela();
+        listarProdutosVendidos();
+    }
+
+    private void configurarTabela() {
+        DefaultTableModel modelo = (DefaultTableModel) TbListaVendas.getModel();
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nome", "Valor", "Status"});
+        sorter = new javax.swing.table.TableRowSorter<>(modelo);
+        TbListaVendas.setRowSorter(sorter);
+    }
+
+    private void listarProdutosVendidos() {
+        try {
+            ProdutosDAO produtosdao = new ProdutosDAO();
+
+            DefaultTableModel model = (DefaultTableModel) TbListaVendas.getModel();
+            model.setNumRows(0);
+
+            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutosVendidos();
+
+            for (int i = 0; i < listagem.size(); i++) {
+                model.addRow(new Object[]{
+                    listagem.get(i).getId(),
+                    listagem.get(i).getNome(),
+                    listagem.get(i).getValor(),
+                    listagem.get(i).getStatus()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos: " + e.getMessage());
+        }
+
     }
 
     @SuppressWarnings("unchecked")
